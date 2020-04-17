@@ -185,7 +185,7 @@ class H5Video extends React.Component {
     }
   };
   // 加上重连机制，如果6s没有触发onTimeUpdate的话就重新连接
-  intervalFetchHls = hls => {
+  intervalFetchHls = (hls, time) => {
     if (this.firstFrameIns) {
       clearTimeout(this.firstFrameIns);
     }
@@ -205,7 +205,7 @@ class H5Video extends React.Component {
           clearTimeout(this.firstFrameIns);
         }
       }
-    }, 6000);
+    }, time || 6000);
   };
   // 进入全屏
   enterFullscreen = () => {
