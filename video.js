@@ -94,7 +94,6 @@ class H5Video extends React.Component {
       return;
     }
     const videoPromise = this.videoEle.play();
-    this.startWebSockt();
     if (videoPromise !== undefined) {
       this.setState({
         isLoad: true
