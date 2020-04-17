@@ -93,8 +93,8 @@ class H5Video extends React.Component {
     if (!this.videoEle) {
       return;
     }
-    // 自动播放，如果判定不支持自动播放，就手动播放
     const videoPromise = this.videoEle.play();
+    this.startWebSockt();
     if (videoPromise !== undefined) {
       this.setState({
         isLoad: true
@@ -107,7 +107,17 @@ class H5Video extends React.Component {
           isShowControls: false
         });
       });
+      // 首次如果3s没播放出来，就重连一次
+      this.intervalFetchHls(rowData.plan.hls, 3000);
+      return;
     }
+
+    this.setState({
+      isStart: false,
+      isPlay: false,
+      isLoad: false,
+      isShowControls: false
+    });
   }
   componentWillUnmount() {
     clearTimeout(this.firstFrameIns); // 去除重连有的定时器
@@ -129,14 +139,9 @@ class H5Video extends React.Component {
   };
   // 点了播放按钮后，onplay会先触发回调
   onPlay = () => {
-    const videos = document.getElementsByTagName("video");
-    for (var i = 0; i < videos.length; i++) {
-      if (videos[i] !== this.videoEle) {
-        videos[i].pause();
-      }
-    }
     this.setState({
-      isStart: true
+      isStart: true,
+      isLoad: true
     });
   };
   // 暂停播放
